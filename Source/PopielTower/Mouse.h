@@ -3,7 +3,9 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
+#include "MovementInstruction.h"
 #include "Mouse.generated.h"
+
 
 UCLASS()
 class POPIELTOWER_API AMouse : public APawn
@@ -14,6 +16,9 @@ public:
 	// Sets default values for this pawn's properties
 	AMouse();
 
+    mutable TArray<FMovementInstruction> instructions;
+    mutable double counter;
+    
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -27,7 +32,11 @@ public:
 
     class UMousePawnMovementComponent* MovementComponent;
     
-    void MoveRight();
+    void Move(float x, float y, float z, float speed);
     
-    void Jump();
+    void MoveRight(float x);
+    
+    float Jump();
+    
+    void Gravity();
 };

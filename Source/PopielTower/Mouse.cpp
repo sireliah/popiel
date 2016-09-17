@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "PopielTower.h"
 #include "Mouse.h"
 #include "MousePawnMovementComponent.h"
+#include "MovementInstruction.h"
 
+#include "iostream"
 
 // Sets default values
 AMouse::AMouse() {
@@ -31,6 +34,14 @@ AMouse::AMouse() {
     
     MovementComponent = CreateDefaultSubobject<UMousePawnMovementComponent>(TEXT("CustomMovementComponent"));
     MovementComponent->UpdatedComponent = RootComponent;
+    
+    counter = 0;
+    
+    FMovementInstruction init_struct;
+    init_struct.right = 50.0f;
+    init_struct.jump = 0.0f;
+    
+    instructions.Add(init_struct);
 }
 
 // Called when the game starts or when spawned
@@ -43,21 +54,39 @@ void AMouse::BeginPlay() {
 void AMouse::Tick( float DeltaTime ) {
 	Super::Tick( DeltaTime );
     
+    FMovementInstruction recorded;
     
-    MoveRight();
+    recorded = instructions[counter];
     
-    int RandomNumber = rand() % 100;
+    //std::cout << recorded.jump << "\n";
+    
+    float jumpheight = 0;
+    
+    int move_right = float(rand() % 500 + (-2000));
+    int random_number = rand() % 100;
         
-        if (RandomNumber >= 90) {
-         
-            Jump();
-            
-        }
+    if (random_number >= 90) {
+        
+        jumpheight = Jump();
 
+    }
+    
+    Gravity();
+    
+    MoveRight(move_right);
+
+    
+    FMovementInstruction moved;
+    moved.right = move_right;
+    moved.jump = jumpheight;
+    
+    instructions.Add(moved);
+    counter += 1;
 }
 
 // Called to bind functionality to input
 void AMouse::SetupPlayerInputComponent(class UInputComponent* InputComponent) {
+
 	Super::SetupPlayerInputComponent(InputComponent);
 
 }
@@ -66,31 +95,38 @@ UPawnMovementComponent* AMouse::GetMovementComponent() const {
     return MovementComponent;
 }
 
-void AMouse::MoveRight() {
-
-    // Move on the x axis.
-    
+void AMouse::Move(float x, float y, float z, float speed) {
     if (MovementComponent && (MovementComponent->UpdatedComponent == RootComponent)) {
 
-        const FVector MovementDirection = FVector(0.0f, -10.0f, 0.0f).GetClampedToMaxSize(1.0f);
-        const float MovementSpeed = 100.0f;
+        const FVector MovementDirection = FVector(x, y, z);   //.GetClampedToMaxSize(100.0f);
+        const float MovementSpeed = speed;
         const FVector Vector = MovementDirection * MovementSpeed;
         MovementComponent->AddInputVector(Vector);
     }
     
 }
 
-void AMouse::Jump() {
+void AMouse::MoveRight(float x) {
+
+    // Move on the x axis.
     
-    if (MovementComponent && (MovementComponent->UpdatedComponent == RootComponent)) {
-        
-        const FVector MovementDirection = FVector(0.0f, 0.0f, 40.0f).GetClampedToMaxSize(1.0f);
-        const float MovementSpeed = 400.0f;
-        const FVector Vector = MovementDirection * MovementSpeed;
-        MovementComponent->AddInputVector(Vector);
-        
-    }
+    Move(0.0f, x, 0.0f, 400.0f);
+
+}
+
+float AMouse::Jump() {
+
+    float jumpheight = float(rand() % 10000);
     
+    Move(0.0f, 0.0f, jumpheight, 1000.0f);
+    
+    return jumpheight;
+    
+}
+
+void AMouse::Gravity() {
+
+    Move(0.0f, 0.0f, -1000.0f, 400.0f);
     
 }
 

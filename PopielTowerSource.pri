@@ -5824,6 +5824,8 @@ SOURCES += \
 	"$$PopielTowerRootPath/Source/PopielTower/CameraPawn.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/Mouse.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/MousePawnMovementComponent.cpp" \
+	"$$PopielTowerRootPath/Source/PopielTower/MouseSpawner.cpp" \
+	"$$PopielTowerRootPath/Source/PopielTower/MovementInstruction.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/PopielTower.cpp" \
  
 
