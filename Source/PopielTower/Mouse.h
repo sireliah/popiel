@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -8,8 +7,8 @@
 
 
 UCLASS()
-class POPIELTOWER_API AMouse : public APawn
-{
+class POPIELTOWER_API AMouse: public APawn {
+
 	GENERATED_BODY()
 
 public:

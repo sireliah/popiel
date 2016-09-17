@@ -1,12 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "PopielTower.h"
 #include "Mouse.h"
 #include "MousePawnMovementComponent.h"
 #include "MovementInstruction.h"
 
-#include "iostream"
+
 
 // Sets default values
 AMouse::AMouse() {
@@ -46,12 +44,14 @@ AMouse::AMouse() {
 
 // Called when the game starts or when spawned
 void AMouse::BeginPlay() {
+    
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
 void AMouse::Tick( float DeltaTime ) {
+    
 	Super::Tick( DeltaTime );
     
     FMovementInstruction recorded;
@@ -126,7 +126,7 @@ float AMouse::Jump() {
 
 void AMouse::Gravity() {
 
-    Move(0.0f, 0.0f, -1000.0f, 400.0f);
+    Move(0.0f, 0.0f, -1000.0f, 1000.0f);
     
 }
 

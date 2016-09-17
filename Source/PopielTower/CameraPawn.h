@@ -7,8 +7,7 @@
 
 
 UCLASS()
-class POPIELTOWER_API ACameraPawn : public APawn
-{
+class POPIELTOWER_API ACameraPawn : public APawn {
 	GENERATED_BODY()
 
 public:
