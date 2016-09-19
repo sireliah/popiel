@@ -53,9 +53,9 @@ void AMouse::BeginPlay() {
 }
 
 // Called every frame
-void AMouse::Tick( float DeltaTime ) {
+void AMouse::Tick( float DeltaSeconds ) {
     
-	Super::Tick( DeltaTime );
+    Super::Tick( DeltaSeconds );
     
 
     //if (MovementComponent->blocked == true) {
@@ -65,7 +65,7 @@ void AMouse::Tick( float DeltaTime ) {
     FMovementInstruction recorded;
     
     recorded = instructions[counter];
-        
+
     float jumpheight = 0;
     
     int move_right = float(rand() % 1000 + (-3000));
