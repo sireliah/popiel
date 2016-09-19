@@ -11,7 +11,7 @@ USTRUCT()
 struct FMovementInstruction {
    
     GENERATED_BODY()
-    
+
     UPROPERTY()
     float right;
     

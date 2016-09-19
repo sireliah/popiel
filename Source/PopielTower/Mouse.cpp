@@ -4,7 +4,7 @@
 #include "MousePawnMovementComponent.h"
 #include "MovementInstruction.h"
 
-
+#include "iostream"
 
 // Sets default values
 AMouse::AMouse() {
@@ -14,20 +14,23 @@ AMouse::AMouse() {
     // Body of the mouse
     
     UCapsuleComponent* MouseBodyComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent"));
-    RootComponent = MouseBodyComponent;
+
     MouseBodyComponent->InitCapsuleSize(40.0f, 70.0f);
     MouseBodyComponent->SetCollisionProfileName(TEXT("Pawn"));
+    //MouseBodyComponent->SetSimulatePhysics(true);
+    //MouseBodyComponent->OnComponentHit.AddDynamic(this, &AMouse::OnHit);
     
+    RootComponent = MouseBodyComponent;
+
     // Mesh
-    
-    UStaticMeshComponent* CapsuleVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
+    UStaticMeshComponent* MouseVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
     // "/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule";
-    CapsuleVisual->SetupAttachment(RootComponent);
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> CapsuleVisualAsset(TEXT("/Game/StarterContent/Shapes/kapsulka.kapsulka"));
-    if (CapsuleVisualAsset.Succeeded()) {
-        CapsuleVisual->SetStaticMesh(CapsuleVisualAsset.Object);
-        CapsuleVisual->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
-        CapsuleVisual->SetWorldScale3D(FVector(0.5f));
+    MouseVisual->SetupAttachment(RootComponent);
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> MouseVisualAsset(TEXT("/Game/mysz3_mtl.mysz3_mtl"));
+    if (MouseVisualAsset.Succeeded()) {
+        MouseVisual->SetStaticMesh(MouseVisualAsset.Object);
+        MouseVisual->SetWorldLocationAndRotation(FVector(0.0f, 0.0f, 40.0f), FRotator(90.0f, 0.0f, -90.0f));
+        MouseVisual->SetWorldScale3D(FVector(0.2f));
     }
     
     MovementComponent = CreateDefaultSubobject<UMousePawnMovementComponent>(TEXT("CustomMovementComponent"));
@@ -54,15 +57,18 @@ void AMouse::Tick( float DeltaTime ) {
     
 	Super::Tick( DeltaTime );
     
+
+    //if (MovementComponent->blocked == true) {
+    //
+    //}
+
     FMovementInstruction recorded;
     
     recorded = instructions[counter];
-    
-    //std::cout << recorded.jump << "\n";
-    
+        
     float jumpheight = 0;
     
-    int move_right = float(rand() % 500 + (-2000));
+    int move_right = float(rand() % 1000 + (-3000));
     int random_number = rand() % 100;
         
     if (random_number >= 90) {
@@ -82,6 +88,11 @@ void AMouse::Tick( float DeltaTime ) {
     
     instructions.Add(moved);
     counter += 1;
+
+    if (counter >= 1000) {
+        Destroy();
+    }
+
 }
 
 // Called to bind functionality to input
@@ -95,6 +106,7 @@ UPawnMovementComponent* AMouse::GetMovementComponent() const {
     return MovementComponent;
 }
 
+
 void AMouse::Move(float x, float y, float z, float speed) {
     if (MovementComponent && (MovementComponent->UpdatedComponent == RootComponent)) {
 
@@ -104,6 +116,10 @@ void AMouse::Move(float x, float y, float z, float speed) {
         MovementComponent->AddInputVector(Vector);
     }
     
+}
+
+void AMouse::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
+    std::cout << "HIT \n";
 }
 
 void AMouse::MoveRight(float x) {
@@ -118,7 +134,7 @@ float AMouse::Jump() {
 
     float jumpheight = float(rand() % 10000);
     
-    Move(0.0f, 0.0f, jumpheight, 1000.0f);
+    Move(0.0f, 0.0f, jumpheight, 2000.0f);
     
     return jumpheight;
     

@@ -12,7 +12,7 @@ UCLASS()
 class POPIELTOWER_API AMouseSpawner: public APawn {
     
     GENERATED_BODY()
-    
+
 public:    
     
     AMouseSpawner();
@@ -23,8 +23,6 @@ public:
     
     virtual void BeginPlay() override;
     
-    virtual void Tick(float DeltaTime) override;
-    
-    
+    virtual void Tick(float DeltaSeconds) override;
     
 };

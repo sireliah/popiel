@@ -10,11 +10,15 @@
  * 
  */
 UCLASS()
-class POPIELTOWER_API UMousePawnMovementComponent : public UPawnMovementComponent
-{
+class POPIELTOWER_API UMousePawnMovementComponent : public UPawnMovementComponent {
 	GENERATED_BODY()
-	
+
 public:
+
+    UMousePawnMovementComponent();
+
+    bool blocked;
+
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	
 	

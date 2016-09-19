@@ -2,14 +2,21 @@
 
 #include "PopielTower.h"
 #include "MousePawnMovementComponent.h"
-
-
 #include "iostream"
+
+
+UMousePawnMovementComponent::UMousePawnMovementComponent() {
+
+    blocked = false;
+
+}
 
 void UMousePawnMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     
+
+
     if (!PawnOwner || !UpdatedComponent || ShouldSkipUpdate(DeltaTime)) {
         return;   
     }
@@ -17,6 +24,9 @@ void UMousePawnMovementComponent::TickComponent(float DeltaTime, ELevelTick Tick
     if (!DesiredMovementThisFrame.IsNearlyZero()) {
         FHitResult Hit;
         SafeMoveUpdatedComponent(DesiredMovementThisFrame, UpdatedComponent->GetComponentRotation(), true, Hit);
-        
+        if (Hit.IsValidBlockingHit()) {
+           blocked = true;
+        }
+
     }
 };

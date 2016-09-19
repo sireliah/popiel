@@ -33,6 +33,8 @@ public:
     
     void Move(float x, float y, float z, float speed);
     
+    void OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
     void MoveRight(float x);
     
     float Jump();

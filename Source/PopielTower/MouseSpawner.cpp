@@ -21,7 +21,7 @@ void AMouseSpawner::Spawn() {
         
    if (world) {
        FVector new_location = GetActorLocation() + FVector(0.0f, 0.f, 30.f);   
-       AMouse* spawned_mouse = world->SpawnActor<AMouse>(AMouse::StaticClass(), new_location, FRotator::ZeroRotator);
+       AMouse* spawned_mouse = world->SpawnActor<AMouse>(AMouse::StaticClass(), new_location, {90.0f, 0.0f, 0.0f});
    }
 }
 
@@ -33,9 +33,10 @@ void AMouseSpawner::BeginPlay() {
     
 }
 
-void AMouseSpawner::Tick(float DeltaTime) {
+void AMouseSpawner::Tick(float DeltaSeconds) {
     
-    Super::Tick(DeltaTime);
+    Super::Tick(DeltaSeconds);
+
     std::cout << "vsdvsdvsdvsdvsdv\n";
     int random_number = rand() % 100;
     if (random_number == 100) {
