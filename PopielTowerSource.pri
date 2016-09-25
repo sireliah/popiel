@@ -5822,10 +5822,12 @@ SOURCES += \
 	"$$unrealRootPath/Engine/Plugins/Slate/SlateRemote/Source/SlateRemote/Private/SlateRemoteModule.cpp" \
 	"$$unrealRootPath/Engine/Plugins/Slate/SlateRemote/Source/SlateRemote/Private/Server/SlateRemoteServer.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/CameraPawn.cpp" \
+	"$$PopielTowerRootPath/Source/PopielTower/InstructionInterface.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/Mouse.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/MousePawnMovementComponent.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/MouseSpawner.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/MovementInstruction.cpp" \
 	"$$PopielTowerRootPath/Source/PopielTower/PopielTower.cpp" \
+	"$$PopielTowerRootPath/Source/PopielTower/Spawner.cpp" \
  
 

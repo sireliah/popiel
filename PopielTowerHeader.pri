@@ -7799,10 +7799,12 @@ HEADERS += \
 	"$$unrealRootPath/Engine/Plugins/Slate/SlateRemote/Source/SlateRemote/Private/Server/SlateRemoteServerMessage.h" \
 	"$$unrealRootPath/Engine/Plugins/Slate/SlateRemote/Source/SlateRemote/Private/Shared/SlateRemoteSettings.h" \
 	"$$PopielTowerRootPath/Source/PopielTower/CameraPawn.h" \
+	"$$PopielTowerRootPath/Source/PopielTower/InstructionInterface.h" \
 	"$$PopielTowerRootPath/Source/PopielTower/Mouse.h" \
 	"$$PopielTowerRootPath/Source/PopielTower/MousePawnMovementComponent.h" \
 	"$$PopielTowerRootPath/Source/PopielTower/MouseSpawner.h" \
 	"$$PopielTowerRootPath/Source/PopielTower/MovementInstruction.h" \
 	"$$PopielTowerRootPath/Source/PopielTower/PopielTower.h" \
+	"$$PopielTowerRootPath/Source/PopielTower/Spawner.h" \
  
 
