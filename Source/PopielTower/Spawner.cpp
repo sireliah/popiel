@@ -41,7 +41,7 @@ void ASpawner::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
         int random_number = rand() % 1000;
-        if (random_number >= 980) {
+        if (random_number >= 998) {
 
             Spawn();
 

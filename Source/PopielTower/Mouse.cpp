@@ -14,12 +14,10 @@ AMouse::AMouse() {
     PrimaryActorTick.bCanEverTick = true;
     
     // Body of the mouse
-    
     UCapsuleComponent* MouseBodyComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("RootComponent"));
 
     MouseBodyComponent->InitCapsuleSize(40.0f, 70.0f);
     MouseBodyComponent->SetCollisionProfileName(TEXT("Spectator"));
-    //MouseBodyComponent->OnComponentHit.AddDynamic(this, &AMouse::OnHit);
     
     RootComponent = MouseBodyComponent;
 
@@ -37,20 +35,39 @@ AMouse::AMouse() {
     MovementComponent->UpdatedComponent = RootComponent;
     
     counter = 0;
-    
+
     FMovementInstruction init_struct;
     init_struct.right = 50.0f;
     init_struct.jump = 0.0f;
-    
+
     instructions.Add(init_struct);
+
+    InstructionDelegateAdd.BindUObject(this, &IInstructionInterface::AddToInstruction);
+    InstructionDelegateGet.BindUObject(this, &IInstructionInterface::GetInstruction);
+
+    CopyBestInstruction();
+
+    number = rand() % 1000;
 }
 
-// Called when the game starts or when spawned
+void AMouse::FireDelegateAdd(TArray<FMovementInstruction> instructions) {
+    InstructionDelegateAdd.Execute(instructions);
+}
+
+TArray<FMovementInstruction> AMouse::FireDelegateGet(TArray<FMovementInstruction> instructions) {
+    return InstructionDelegateGet.Execute(instructions);
+}
+
+void AMouse::CopyBestInstruction() {
+
+     best_instruction = FireDelegateGet(best_instruction);
+}
+
 void AMouse::BeginPlay() {
     
     Super::BeginPlay();
 
-    GetWorldTimerManager().SetTimer(TimerHandle, this, &AMouse::Counter, 0.1f, true);
+    GetWorldTimerManager().SetTimer(TimerHandle, this, &AMouse::MovementTimer, 0.1f, true);
 	
 }
 
@@ -59,8 +76,6 @@ void AMouse::Tick(float DeltaTime) {
     
     Super::Tick(DeltaTime);
 
-    //MoveRandomly(DeltaTime);
-
     Gravity(DeltaTime);
 
     counter += 1;
@@ -68,13 +83,21 @@ void AMouse::Tick(float DeltaTime) {
     FVector MouseLocation = GetActorLocation();
 
     if (MouseLocation.Y < 160 || counter > 10000) {
+        InstructionDelegateAdd.BindUObject(this, &IInstructionInterface::AddToInstruction);
+
+        FireDelegateAdd(instructions);
+
         Destroy();
     }
 
 }
 
-void AMouse::Counter() {
-    MoveRandomly(100.0f);
+void AMouse::MovementTimer() {
+    if (best_instruction.Num() > 50) {
+        MoveUsingInstructions(100.0f);
+    } else {
+        MoveRandomly(100.0f);
+    }
 }
 
 // Called to bind functionality to input
@@ -96,24 +119,32 @@ void AMouse::MoveRandomly(float DeltaTime) {
     int random_number = rand() % 100;
 
     if (random_number >= 95) {
-
-        jumpheight = Jump(DeltaTime);
+        jumpheight = float(FMath::FRandRange(1, 70));
+        Jump(jumpheight, DeltaTime);
 
     }
 
     MoveRight(move_right, DeltaTime);
 
+    // Save history of movements.
     FMovementInstruction moved;
     moved.right = move_right;
     moved.jump = jumpheight;
     instructions.Add(moved);
-
 }
 
-void AMouse::MoveOnInstructions(float DeltaTime) {
+void AMouse::MoveUsingInstructions(float DeltaTime) {
 
-    FMovementInstruction recorded;
-    recorded = instructions[counter];
+    if (best_instruction.Num() > 0) {
+        //std::cout << &best_instruction << "trying to use instructions \n";
+        FMovementInstruction move = best_instruction.Pop();
+        MoveRight(move.right, DeltaTime);
+        Jump(move.jump, DeltaTime);
+    } else {
+        std::cout << "end of instructions! \n";
+        Destroy();
+    }
+
 }
 
 void AMouse::Move(float x, float y, float z, float speed, float DeltaTime) {
@@ -135,18 +166,14 @@ void AMouse::MoveRight(float x, float DeltaTime) {
 
 }
 
-float AMouse::Jump(float DeltaTime) {
+void AMouse::Jump(float jumpheight, float DeltaTime) {
 
     FVector MouseLocation = GetActorLocation();
-    float jumpheight = float(FMath::FRandRange(1, 70));
 
     MouseLocation.Z += jumpheight;
     SetActorLocation(MouseLocation, true);
 
-    //Move(0.0f, 0.0f, jumpheight, 2000000.0f, DeltaTime);
-    
-    return jumpheight;
-    
+    //Move(0.0f, 0.0f, jumpheight, 2000000.0f, DeltaTime);    
 }
 
 void AMouse::Gravity(float DeltaTime) {

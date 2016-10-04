@@ -2,19 +2,31 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
-#include "MovementInstruction.h"
+#include "InstructionInterface.h"
 #include "Mouse.generated.h"
 
 
 UCLASS()
-class POPIELTOWER_API AMouse: public APawn {
+class POPIELTOWER_API AMouse : public APawn, public IInstructionInterface {
 
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
+
     AMouse();
 
+    int number;
+
+    virtual void FireDelegateAdd(TArray<FMovementInstruction> instructions) override;
+
+    virtual TArray<FMovementInstruction> FireDelegateGet(TArray<FMovementInstruction> instructions) override;
+
+    void CopyBestInstruction();
+
+    TArray<FMovementInstruction> best_instruction;
+
     mutable TArray<FMovementInstruction> instructions;
+
     mutable double counter;
     
     // Called when the game starts or when spawned
@@ -30,7 +42,7 @@ public:
 
     class UMousePawnMovementComponent* MovementComponent;
     
-    void Counter();
+    void MovementTimer();
 
     FTimerHandle TimerHandle;
 
@@ -38,11 +50,11 @@ public:
 
     void MoveRandomly(float DeltaTime);
 
-    void MoveOnInstructions(float DeltaTime);
+    void MoveUsingInstructions(float DeltaTime);
 
     void MoveRight(float x, float DeltaTime);
     
-    float Jump(float DeltaTime);
+    void Jump(float jumpheight, float DeltaTime);
     
     void Gravity(float DeltaTime);
 };
