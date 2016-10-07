@@ -50,17 +50,18 @@ AMouse::AMouse() {
     number = rand() % 1000;
 }
 
-void AMouse::FireDelegateAdd(TArray<FMovementInstruction> instructions) {
-    InstructionDelegateAdd.Execute(instructions);
+void AMouse::FireDelegateAdd(TArray<FMovementInstruction> instructions, float efficiency) {
+    InstructionDelegateAdd.Execute(instructions, efficiency);
 }
 
-TArray<FMovementInstruction> AMouse::FireDelegateGet(TArray<FMovementInstruction> instructions) {
-    return InstructionDelegateGet.Execute(instructions);
+TArray<FMovementInstruction> AMouse::FireDelegateGet() {
+    return InstructionDelegateGet.Execute();
 }
 
 void AMouse::CopyBestInstruction() {
 
-     best_instruction = FireDelegateGet(best_instruction);
+     best_instruction = FireDelegateGet();
+     std::cout << "Got best_instruction of len: " << best_instruction.Num() << "\n";
 }
 
 void AMouse::BeginPlay() {
@@ -71,7 +72,6 @@ void AMouse::BeginPlay() {
 	
 }
 
-// Called every frame
 void AMouse::Tick(float DeltaTime) {
     
     Super::Tick(DeltaTime);
@@ -82,10 +82,13 @@ void AMouse::Tick(float DeltaTime) {
 
     FVector MouseLocation = GetActorLocation();
 
-    if (MouseLocation.Y < 160 || counter > 10000) {
+    if (MouseLocation.Y < 160 || counter > 1000) {
+
         InstructionDelegateAdd.BindUObject(this, &IInstructionInterface::AddToInstruction);
 
-        FireDelegateAdd(instructions);
+        float efficiency = float(MouseLocation.Y) / float(counter);
+
+        FireDelegateAdd(instructions, efficiency);
 
         Destroy();
     }
@@ -136,7 +139,6 @@ void AMouse::MoveRandomly(float DeltaTime) {
 void AMouse::MoveUsingInstructions(float DeltaTime) {
 
     if (best_instruction.Num() > 0) {
-        //std::cout << &best_instruction << "trying to use instructions \n";
         FMovementInstruction move = best_instruction.Pop();
         MoveRight(move.right, DeltaTime);
         Jump(move.jump, DeltaTime);
@@ -170,7 +172,7 @@ void AMouse::Jump(float jumpheight, float DeltaTime) {
 
     FVector MouseLocation = GetActorLocation();
 
-    MouseLocation.Z += jumpheight;
+    MouseLocation.Z += jumpheight * DeltaTime;
     SetActorLocation(MouseLocation, true);
 
     //Move(0.0f, 0.0f, jumpheight, 2000000.0f, DeltaTime);    
@@ -178,7 +180,12 @@ void AMouse::Jump(float jumpheight, float DeltaTime) {
 
 void AMouse::Gravity(float DeltaTime) {
 
-    Move(0.0f, 0.0f, -5.0f, 1.0f, DeltaTime);
+    FVector MouseLocation = GetActorLocation();
+
+    MouseLocation.Z -= 5.0f * DeltaTime;
+    SetActorLocation(MouseLocation, true);
+
+    //Move(0.0f, 0.0f, -5.0f, 1.0f, DeltaTime);
     
 }
 

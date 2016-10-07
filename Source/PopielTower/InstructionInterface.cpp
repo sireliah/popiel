@@ -13,23 +13,30 @@ UInstructionInterface::UInstructionInterface(const class FObjectInitializer& Obj
 
 }
 
-FDelegateSignature IInstructionInterface::InstructionDelegateAdd = {};
-FDelegateSignature2 IInstructionInterface::InstructionDelegateGet = {};
+IInstructionInterface::IInstructionInterface() {
 
 
-TArray<FMovementInstruction> IInstructionInterface::best_instruction = {};
 
-void IInstructionInterface::AddToInstruction(TArray<FMovementInstruction> instructions) {
-
-    best_instruction = instructions;
 }
 
-TArray<FMovementInstruction> IInstructionInterface::GetInstruction(TArray<FMovementInstruction> instructions) {
+FDelegateSignature IInstructionInterface::InstructionDelegateAdd = {};
+FDelegateSignature2 IInstructionInterface::InstructionDelegateGet = {};
+TArray<FMovementInstruction> IInstructionInterface::best_instruction = {};
+float IInstructionInterface::best_efficiency = 0.0f;
 
-    //for (int i = 0; i < instruction.Num(); i++) {
-    //    std::cout << instruction[i] << " ";
-    //}
-    //std::cout << "\n";
+
+void IInstructionInterface::AddToInstruction(TArray<FMovementInstruction> instructions, float efficiency) {
+    std::cout << "Old efficiency: " << best_efficiency << " Received efficiency: " << efficiency <<"\n";
+
+    if (efficiency > best_efficiency) {
+        std::cout << "This instruction is best so far!\n";
+        best_efficiency = efficiency;
+        best_instruction = instructions;
+    }
+
+}
+
+TArray<FMovementInstruction> IInstructionInterface::GetInstruction() {
 
     return best_instruction;
 }

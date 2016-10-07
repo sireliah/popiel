@@ -17,9 +17,9 @@ public:
 
     int number;
 
-    virtual void FireDelegateAdd(TArray<FMovementInstruction> instructions) override;
+    virtual void FireDelegateAdd(TArray<FMovementInstruction> instructions, float efficiency) override;
 
-    virtual TArray<FMovementInstruction> FireDelegateGet(TArray<FMovementInstruction> instructions) override;
+    virtual TArray<FMovementInstruction> FireDelegateGet() override;
 
     void CopyBestInstruction();
 
