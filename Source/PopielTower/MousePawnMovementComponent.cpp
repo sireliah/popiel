@@ -20,7 +20,7 @@ void UMousePawnMovementComponent::TickComponent(float DeltaTime, ELevelTick Tick
     if (!PawnOwner || !UpdatedComponent || ShouldSkipUpdate(DeltaTime)) {
         return;   
     }
-    FVector DesiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * DeltaTime * 500.0f;
+    FVector DesiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * DeltaTime; // * 500.0f;
     if (!DesiredMovementThisFrame.IsNearlyZero()) {
         FHitResult Hit;
         SafeMoveUpdatedComponent(DesiredMovementThisFrame, UpdatedComponent->GetComponentRotation(), true, Hit);

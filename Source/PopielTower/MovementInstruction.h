@@ -18,5 +18,9 @@ struct FMovementInstruction {
     UPROPERTY()
     float jump;
     
-    
+    UPROPERTY()
+    float x;
+
+    UPROPERTY()
+    float y;
 };
